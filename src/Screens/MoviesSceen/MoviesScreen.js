@@ -1,11 +1,5 @@
-import {
-  StyleSheet,
-  FlatList,
-  ScrollView,
-  View,
-  Dimensions,
-} from "react-native";
-import React from "react";
+import { StyleSheet, ScrollView, View, Dimensions, Text } from "react-native";
+import React, { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import SafeAreaContainer from "../../components/SafeAreaContainer";
@@ -13,8 +7,11 @@ import MoviesComponent from "../../components/MoviesComponent";
 import AppSearchInput from "../../components/AppSearchInput";
 
 export default function MoviesScreen() {
+  const [searchQuery, setSearchQuery] = useState(""); // Step 1: Add state for search query
+
   const screenWidth = Dimensions.get("window").width;
   const itemWidth = screenWidth / 2 - 20;
+
   const movies = [
     {
       image: require("../../assets/squidgame.jpeg"),
@@ -88,15 +85,25 @@ export default function MoviesScreen() {
     },
   ];
 
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
   return (
     <SafeAreaContainer>
       <AppSearchInput
         placeholder={"Search..."}
         icon={<MaterialIcons name="search" size={24} color="black" />}
+        // onPress={() => console.log("Search button pressed")}
+        onChangeText={handleSearch}
       />
       <ScrollView contentContainerStyle={styles.listContainer}>
-        {movies &&
-          movies.map((item, index) => (
+        {filteredMovies.length > 0 ? (
+          filteredMovies.map((item, index) => (
             <View
               key={index}
               style={[styles.itemContainer, { width: itemWidth }]}
@@ -109,7 +116,12 @@ export default function MoviesScreen() {
                 type={item.type}
               />
             </View>
-          ))}
+          ))
+        ) : (
+          <View style={styles.noResultsContainer}>
+            <Text>No movies found</Text>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaContainer>
   );
@@ -124,5 +136,11 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginBottom: 16,
+  },
+  noResultsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
   },
 });

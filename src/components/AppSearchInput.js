@@ -12,7 +12,8 @@ export default function AppSearchInput({
   icon,
   placeholder,
   title,
-  onOress,
+  onPress,
+  onChangeText,
   ...otherProps
 }) {
   const width = Dimensions.get("window").width;
@@ -23,10 +24,11 @@ export default function AppSearchInput({
       <TextInput
         placeholder={placeholder}
         style={styles.input}
+        onChangeText={onChangeText}
         {...otherProps}
       />
       {icon && (
-        <TouchableOpacity style={styles.icon} onPress={onOress}>
+        <TouchableOpacity style={styles.icon} onPress={onPress}>
           {icon}
         </TouchableOpacity>
       )}
