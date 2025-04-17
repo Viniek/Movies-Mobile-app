@@ -1,17 +1,20 @@
-import { StyleSheet,  FlatList,ScrollView,View,   Dimensions } from "react-native";
+import {
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  View,
+  Dimensions,
+} from "react-native";
 import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
-import AppTextInput from "../../components/AppTextInput";
+import AppSearchInput from "../../components/AppSearchInput";
 
 export default function MoviesScreen() {
-
-  
-const screenWidth = Dimensions.get('window').width;
-const itemWidth = screenWidth / 2 - 20;
+  const screenWidth = Dimensions.get("window").width;
+  const itemWidth = screenWidth / 2 - 20;
   const movies = [
     {
       image: require("../../assets/squidgame.jpeg"),
@@ -87,20 +90,26 @@ const itemWidth = screenWidth / 2 - 20;
 
   return (
     <SafeAreaContainer>
-      <AppTextInput placeholder={'Search...'} icon={<MaterialIcons name="search" size={24} color="black" />
-}/>
+      <AppSearchInput
+        placeholder={"Search..."}
+        icon={<MaterialIcons name="search" size={24} color="black" />}
+      />
       <ScrollView contentContainerStyle={styles.listContainer}>
-        { movies && movies.map((item, index) => (
-          <View key={index} style={[styles.itemContainer, { width: itemWidth }]}>
-            <MoviesComponent
-              image={item.image}
-              title={item.title}
-              ratings={item.ratings}
-              downloads={item.downloads}
-              type={item.type}
-            />
-          </View>
-        ))}
+        {movies &&
+          movies.map((item, index) => (
+            <View
+              key={index}
+              style={[styles.itemContainer, { width: itemWidth }]}
+            >
+              <MoviesComponent
+                image={item.image}
+                title={item.title}
+                ratings={item.ratings}
+                downloads={item.downloads}
+                type={item.type}
+              />
+            </View>
+          ))}
       </ScrollView>
     </SafeAreaContainer>
   );
@@ -108,10 +117,10 @@ const itemWidth = screenWidth / 2 - 20;
 
 const styles = StyleSheet.create({
   listContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    padding: 10
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    padding: 10,
   },
   itemContainer: {
     marginBottom: 16,
