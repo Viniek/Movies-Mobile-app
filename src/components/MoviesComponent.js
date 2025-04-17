@@ -20,8 +20,8 @@ export default function MoviesComponent({
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
         <Text>{type}</Text>
-        <Text >Ratings: {ratings}</Text>
-        <Text >downloads: {downloads}</Text>
+        <Text>Ratings: {ratings}</Text>
+        <Text>downloads: {downloads}</Text>
       </View>
     </View>
   );
@@ -30,21 +30,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
     elevation: 2, // for Android shadow
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   info: {
     padding: 8,
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
     marginBottom: 4,
   },
