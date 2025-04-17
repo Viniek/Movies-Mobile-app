@@ -1,10 +1,17 @@
-import { StyleSheet,  FlatList } from "react-native";
+import { StyleSheet,  FlatList,ScrollView,View,   Dimensions } from "react-native";
 import React from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
+
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
+import AppTextInput from "../../components/AppTextInput";
+
 export default function MoviesScreen() {
+
+  
+const screenWidth = Dimensions.get('window').width;
+const itemWidth = screenWidth / 2 - 20;
   const movies = [
     {
       image: require("../../assets/squidgame.jpeg"),
@@ -80,31 +87,33 @@ export default function MoviesScreen() {
 
   return (
     <SafeAreaContainer>
-      <FlatList
-        key={"grid-3"} // This key must be unique when numColumns changes
-        numColumns={3}
-        contentContainerStyle={styles.listContainer}
-        data={movies}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <MoviesComponent
-            image={item.image}
-            title={item.title}
-            ratings={item.ratings}
-            downloads={item.downloads}
-            type={item.type}
-          />
-        )}
-      />
-
-      {/* <MaterialIcons name="18-up-rating" size={24} color="black" /> */}
+      <AppTextInput placeholder={'Search...'} icon={<MaterialIcons name="search" size={24} color="black" />
+}/>
+      <ScrollView contentContainerStyle={styles.listContainer}>
+        { movies && movies.map((item, index) => (
+          <View key={index} style={[styles.itemContainer, { width: itemWidth }]}>
+            <MoviesComponent
+              image={item.image}
+              title={item.title}
+              ratings={item.ratings}
+              downloads={item.downloads}
+              type={item.type}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </SafeAreaContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    // flexWrap:'wrap',
+  listContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 10
+  },
+  itemContainer: {
+    marginBottom: 16,
   },
 });
