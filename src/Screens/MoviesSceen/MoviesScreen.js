@@ -87,6 +87,8 @@ const itemWidth = screenWidth / 2 - 20;
 
   return (
     <SafeAreaContainer>
+      <AppTextInput placeholder={'Search...'} icon={<MaterialIcons name="search" size={24} color="black" />
+}/>
       <ScrollView contentContainerStyle={styles.listContainer}>
         { movies && movies.map((item, index) => (
           <View key={index} style={[styles.itemContainer, { width: itemWidth }]}>
