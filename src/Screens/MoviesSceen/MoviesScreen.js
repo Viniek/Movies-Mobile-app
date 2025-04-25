@@ -1,119 +1,129 @@
-import { StyleSheet,  FlatList,ScrollView,View,   Dimensions } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  FlatList,
+  ActivityIndicator,
+  Text,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
+import axios from "axios";
+import Constants from "expo-constants"
 
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
 import AppTextInput from "../../components/AppTextInput";
 
 export default function MoviesScreen() {
+  const API_KEY = Constants.expoConfig.extra.TMDB_API_KEY;
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState(null);
 
-  
-const screenWidth = Dimensions.get('window').width;
-const itemWidth = screenWidth / 2 - 20;
-  const movies = [
-    {
-      image: require("../../assets/squidgame.jpeg"),
-      title: "Squid Game",
-      ratings: 7.5,
-      downloads: "100",
-      type: "Action",
-    },
-    {
-      image: require("../../assets/inception.jpeg"),
-      title: "Inception",
-      ratings: 8.8,
-      downloads: "500",
-      type: "Sci-Fi",
-    },
-    {
-      image: require("../../assets/interstellar.jpeg"),
-      title: "Interstellar",
-      ratings: 8.6,
-      downloads: "450",
-      type: "Sci-Fi",
-    },
-    {
-      image: require("../../assets/avatar.jpeg"),
-      title: "Avatar",
-      ratings: 7.8,
-      downloads: "600",
-      type: "Fantasy",
-    },
-    {
-      image: require("../../assets/joker.jpeg"),
-      title: "Joker",
-      ratings: 8.5,
-      downloads: "300",
-      type: "Drama",
-    },
-    {
-      image: require("../../assets/parasite.jpeg"),
-      title: "Parasite",
-      ratings: 8.6,
-      downloads: "250",
-      type: "Thriller",
-    },
-    {
-      image: require("../../assets/spiderman.jpeg"),
-      title: "Spider-Man: No Way Home",
-      ratings: 8.3,
-      downloads: "700",
-      type: "Action",
-    },
-    {
-      image: require("../../assets/batman.jpeg"),
-      title: "The Batman",
-      ratings: 7.9,
-      downloads: "400",
-      type: "Action",
-    },
-    {
-      image: require("../../assets/blackpanther.jpeg"),
-      title: "Black Panther",
-      ratings: 7.3,
-      downloads: "350",
-      type: "Adventure",
-    },
-    {
-      image: require("../../assets/strangerthings.jpeg"),
-      title: "Stranger Things",
-      ratings: 8.7,
-      downloads: "800",
-      type: "Mystery",
-    },
-  ];
+  const { width: screenWidth } = useWindowDimensions();
+
+  // Dynamically calculate columns
+  const minItemWidth = 180; // Minimum desired width per movie card
+  const numColumns = Math.max(2, Math.floor(screenWidth / minItemWidth));
+  const itemWidth = screenWidth / numColumns - 20;
+
+  const fetchMovies = async (pageNumber = 1) => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`
+      );
+      const newMovies = res.data.results;
+      if (newMovies.length > 0) {
+        setMovies((prev) => [...prev, ...newMovies]);
+        setPage(pageNumber + 1);
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      setError("Failed. Try again later.");
+      console.error("Fetch failed:", err);
+    }
+    setLoading(false);
+    setError(null);
+  };
+
+  useEffect(() => {
+    fetchMovies(page);
+  }, []);
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={[styles.itemContainer, { width: itemWidth }]}>
+      <MoviesComponent
+        image={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }}
+        title={item.title}
+        ratings={item.vote_average}
+        downloads={item.vote_count}
+        type={item.genre_ids[0]?.toString() || "N/A"}
+      />
+    </View>
+  );
+
+  const keyExtractor = (item, index) => item.id?.toString() || index.toString();
+
+  const handleLoadMore = () => fetchMovies(page);
 
   return (
     <SafeAreaContainer>
-      <AppTextInput placeholder={'Search...'} icon={<MaterialIcons name="search" size={24} color="black" />
-}/>
-      <ScrollView contentContainerStyle={styles.listContainer}>
-        { movies && movies.map((item, index) => (
-          <View key={index} style={[styles.itemContainer, { width: itemWidth }]}>
-            <MoviesComponent
-              image={item.image}
-              title={item.title}
-              ratings={item.ratings}
-              downloads={item.downloads}
-              type={item.type}
-            />
-          </View>
-        ))}
-      </ScrollView>
+      <AppTextInput
+        placeholder="Search movies..."
+        icon={<MaterialIcons name="search" size={24} color="black" />}
+        value={search}
+        onChangeText={setSearch}
+      />
+
+      <FlatList
+        data={filteredMovies}
+        keyExtractor={keyExtractor}
+        numColumns={numColumns}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContainer}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={loading ? <ActivityIndicator size="large" /> : null}
+        ListEmptyComponent={
+          !loading && (
+            <View style={styles.emptyContainer}>
+              <MaterialIcons name="movie-filter" size={48} color="#888" />
+              <Text style={styles.emptyText}>No movies found</Text>
+            </View>
+          )
+        }
+      />
     </SafeAreaContainer>
   );
 }
 
 const styles = StyleSheet.create({
   listContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    padding: 10
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
   itemContainer: {
-    marginBottom: 16,
+    margin: 10,
+  },
+  emptyContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 50,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#555",
+    marginTop: 10,
   },
 });
