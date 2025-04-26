@@ -4,13 +4,23 @@ import React from "react";
 import AppButton from "./AppButton";
 
 const AppNavigator = () => {
+
+    const buttons =[
+{
+    title:'All',
+    handlePress: function(){alert('pressed');
+    }
+}
+]
   function handlePress() {
     alert("pressed");
   }
   return (
     <View style={styles.container}>
-      <AppButton title="All" onPress={handlePress} />
-      <AppButton title="All" onPress={handlePress} />
+
+        {buttons && buttons.map((button,index)=><AppButton key={index} title={button.title} onPress={button.handlePress}/>)}
+      {/* <AppButton title="All" onPress={handlePress} />
+      <AppButton title="All" onPress={handlePress} /> */}
     </View>
   );
 };
