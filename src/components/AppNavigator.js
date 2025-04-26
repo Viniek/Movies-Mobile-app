@@ -8,19 +8,36 @@ const AppNavigator = () => {
     const buttons =[
 {
     title:'All',
-    handlePress: function(){alert('pressed');
+    handlePress: function(){alert('All');
     }
-}
+},
+{
+    title:'Action',
+    handlePress: function(){alert('Action');
+    } 
+},
+{
+    title:'Trending',
+    handlePress: function(){alert('trnding');
+    } 
+},
+{
+    title:'Horror',
+    handlePress: function(){alert('horror');
+    } 
+},
+{
+    title:'Animation',
+    handlePress: function(){alert('Animation');
+    } 
+},
 ]
-  function handlePress() {
-    alert("pressed");
-  }
+
   return (
     <View style={styles.container}>
 
         {buttons && buttons.map((button,index)=><AppButton key={index} title={button.title} onPress={button.handlePress}/>)}
-      {/* <AppButton title="All" onPress={handlePress} />
-      <AppButton title="All" onPress={handlePress} /> */}
+    
     </View>
   );
 };
