@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import axios from "axios";
-import Constants from "expo-constants"
+import Constants from "expo-constants";
 
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
@@ -36,7 +36,7 @@ export default function MoviesScreen() {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`
+        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`,
       );
       const newMovies = res.data.results;
       if (newMovies.length > 0) {
@@ -58,7 +58,7 @@ export default function MoviesScreen() {
   }, []);
 
   const filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase())
+    movie.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   const renderItem = ({ item }) => (
@@ -94,7 +94,9 @@ export default function MoviesScreen() {
         contentContainerStyle={styles.listContainer}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <ActivityIndicator size="large" /> : null}
+        ListFooterComponent={
+          loading ? <ActivityIndicator size="large" /> : null
+        }
         ListEmptyComponent={
           !loading && (
             <View style={styles.emptyContainer}>
