@@ -5,7 +5,7 @@ const AppButton = ({ title, onPress }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
-        <Text>{title}</Text>
+        <Text style={styles.button}>{title}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
   },
   button: {
     color: "#000",
-    backgroundColor: "#fff",
+
+    textTransform: "capitalize",
+    fontWeight: "bold",
   },
 });
