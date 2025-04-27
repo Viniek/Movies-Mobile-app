@@ -19,7 +19,7 @@ export default function MoviesComponent({
       />
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>
-        <Text >{type}</Text>
+        <Text>{type}</Text>
         <Text style={styles.rating}>Ratings: {ratings}</Text>
         <Text>downloads: {downloads}</Text>
       </View>
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4,
   },
-  rating:{
-    color:'orange',
+  rating: {
+    color: "orange",
     fontWeight: "bold",
-  }
+  },
 });
