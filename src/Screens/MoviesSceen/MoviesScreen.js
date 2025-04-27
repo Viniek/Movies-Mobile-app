@@ -80,7 +80,7 @@ export default function MoviesScreen() {
   return (
     <SafeAreaContainer>
       <AppTextInput
-        placeholder="Search movies..."
+        placeholder="Search For Movies..."
         icon={<MaterialIcons name="search" size={24} color="black" />}
         value={search}
         onChangeText={setSearch}
