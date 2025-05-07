@@ -8,7 +8,6 @@ import AppNavigator from "./src/components/AppNavigator";
 import MoviesScreen from "./src/Screens/MoviesSceen/MoviesScreen";
 import ActionMoviesScreen from "./src/Screens/MoviesSceen/ActionMoviesScreen";
 
-
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -31,11 +30,9 @@ export default function App() {
 
   return (
     <View style={styles.app}>
-     
       <AppNavigator onCategoryChange={setSelectedCategory} />
       {renderMoviesScreen()}
     </View>
-    
   );
 }
 

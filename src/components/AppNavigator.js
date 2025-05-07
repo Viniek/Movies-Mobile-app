@@ -5,7 +5,7 @@ import AppButton from "./AppButton";
 const AppNavigator = ({ onCategoryChange }) => {
   const buttons = [
     { title: "For you" },
-    {title:"Popular"},
+    { title: "Popular" },
     { title: "Trending" },
     { title: "Action" },
     { title: "Animation" },

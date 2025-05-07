@@ -6,13 +6,12 @@ import {
   ActivityIndicator,
   Text,
   Modal,
-  Button,  
+  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import axios from "axios";
 import Constants from "expo-constants";
-
 
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
@@ -20,8 +19,7 @@ import AppTextInput from "../../components/AppTextInput";
 import MovieDetails from "../../components/MovieDetails";
 
 export default function MoviesScreen() {
-
-  const [isOverlayVisible,setIsOverlayVisible] = useState(false)
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   const API_KEY = Constants.expoConfig.extra.TMDB_API_KEY;
   const [movies, setMovies] = useState([]);
@@ -30,8 +28,7 @@ export default function MoviesScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
-
-
+  const [selectedMovie, setSelectedMovie] = useState(null)
   const { width: screenWidth } = useWindowDimensions();
 
   // Dynamically calculate columns
@@ -46,8 +43,8 @@ export default function MoviesScreen() {
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`,
       );
-      console.log('response array',res.data.results);
-      
+      console.log("response array", res.data.results);
+
       const newMovies = res.data.results;
       if (newMovies.length > 0) {
         setMovies((prev) => [...prev, ...newMovies]);
@@ -71,9 +68,10 @@ export default function MoviesScreen() {
     movie.title.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const openOverlay = async()=>{
-    setIsOverlayVisible(true)
-  }
+  const openOverlay = async (movie) => {
+    setSelectedMovie(movie)
+    setIsOverlayVisible(true);
+  };
   const renderItem = ({ item }) => (
     <View style={[styles.itemContainer, { width: itemWidth }]}>
       <MoviesComponent
@@ -82,10 +80,12 @@ export default function MoviesScreen() {
         ratings={item.vote_average}
         downloads={item.vote_count}
         type={item.genre_ids[0]?.toString() || "N/A"}
-        download={'Download'}
+        download={"Download"}
         downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
-        onImagePress={openOverlay}
-        onDownloadPress={() => alert(`This Feature of downloading: ${item.title} is coming sooon` )}
+        onImagePress={()=>openOverlay(item)}
+        onDownloadPress={() =>
+          alert(`This Feature of downloading: ${item.title} is coming sooon`)
+        }
       />
     </View>
   );
@@ -124,33 +124,31 @@ export default function MoviesScreen() {
         }
       />
 
-<Modal
-  transparent
-  visible={isOverlayVisible}
-  animationType="fade"
-  onRequestClose={() => setIsOverlayVisible(false)}
->
+      <Modal
+        transparent
+        visible={isOverlayVisible}
+        animationType="fade"
+        onRequestClose={() => setIsOverlayVisible(false)}
+      >
+{
+  selectedMovie && 
   <View style={styles.overlay}>
-    <View style={styles.modalContent}>
-      
-      <Button title="X" onPress={() => setIsOverlayVisible(false)} />
-<MovieDetails
-MovieTitle={"title"}
-MovieOverview={'overview'}
-MovieLanguage={'language'}
-MovieImage={'image'}
-MovieRatings={'ratings'}
-MovieDownloads={'downloads'}
-MovieType={'type'}
-MovieReleaseDate={'release date'}
-MovieDownloadIcon={'download icon'}
-
-
-/>
-    </View>
+  <View style={styles.modalContent}>
+    <Button title="X" onPress={() => setIsOverlayVisible(false)} />
+    <MovieDetails
+          MovieImage={}
+          MovieTitle={selectedMovie.title}
+          MovieOverview={selectedMovie.overview}
+          MovieLanguage={selectedMovie.original_language}
+          MovieRatings={selectedMovie.vote_average}
+          MovieDownloads={selectedMovie.vote_count}
+          MovieType={selectedMovie.genre_ids[0]?.toString() || "N/A"}
+          MovieReleaseDate={selectedMovie.release_date}
+    />
   </View>
-</Modal>
-
+</View>
+}
+      </Modal>
     </SafeAreaContainer>
   );
 }
@@ -175,20 +173,19 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
   },
   modalText: {
     fontSize: 18,
     marginBottom: 15,
   },
-  
 });
