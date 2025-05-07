@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "myApp",
+    "name": "myAppzz",
     "slug": "myApp",
     "version": "1.0.0",
     "orientation": "default",
@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./src/assets/splash-icon.png",
+      "image": "./src/assets/icon.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
