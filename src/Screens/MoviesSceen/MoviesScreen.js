@@ -28,7 +28,7 @@ export default function MoviesScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedMovie, setSelectedMovie] = useState(null)
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const { width: screenWidth } = useWindowDimensions();
 
   // Dynamically calculate columns
@@ -69,7 +69,7 @@ export default function MoviesScreen() {
   );
 
   const openOverlay = async (movie) => {
-    setSelectedMovie(movie)
+    setSelectedMovie(movie);
     setIsOverlayVisible(true);
   };
   const renderItem = ({ item }) => (
@@ -82,7 +82,7 @@ export default function MoviesScreen() {
         type={item.genre_ids[0]?.toString() || "N/A"}
         download={"Download"}
         downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
-        onImagePress={()=>openOverlay(item)}
+        onImagePress={() => openOverlay(item)}
         onDownloadPress={() =>
           alert(`This Feature of downloading: ${item.title} is coming sooon`)
         }
@@ -130,24 +130,24 @@ export default function MoviesScreen() {
         animationType="fade"
         onRequestClose={() => setIsOverlayVisible(false)}
       >
-{
-  selectedMovie && 
-  <View style={styles.overlay}>
-  <View style={styles.modalContent}>
-    <Button title="X" onPress={() => setIsOverlayVisible(false)} />
-    <MovieDetails
-          MovieImage={}
-          MovieTitle={selectedMovie.title}
-          MovieOverview={selectedMovie.overview}
-          MovieLanguage={selectedMovie.original_language}
-          MovieRatings={selectedMovie.vote_average}
-          MovieDownloads={selectedMovie.vote_count}
-          MovieType={selectedMovie.genre_ids[0]?.toString() || "N/A"}
-          MovieReleaseDate={selectedMovie.release_date}
-    />
-  </View>
-</View>
-}
+        {selectedMovie && (
+          <View style={styles.overlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}><Button title="X" onPress={() => setIsOverlayVisible(false)} /></View>
+              <MovieDetails
+                MovieImage={{
+                  uri: `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`,
+                }}
+                MovieTitle={selectedMovie.title}
+                MovieOverview={selectedMovie.overview}
+                MovieLanguage={selectedMovie.original_language}
+                MovieRatings={selectedMovie.vote_average}
+                MovieDownloads={selectedMovie.vote_count}
+                MovieReleaseDate={selectedMovie.release_date}
+              />
+            </View>
+          </View>
+        )}
       </Modal>
     </SafeAreaContainer>
   );
@@ -181,11 +181,26 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
+    maxHeight: "80%",
     alignItems: "center",
+    position: "relative",
   },
+  modalHeader: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  marginBottom:10
+  },
+  
   modalText: {
     fontSize: 18,
     marginBottom: 15,
   },
+  modalCloseBtn:{
+    display:"flex",
+    justifyContent:"flex-end",
+    borderColor:"white"
+  }
 });
