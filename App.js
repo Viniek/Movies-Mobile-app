@@ -7,6 +7,7 @@ import HorrorMoviesScreen from "./HorrorMoviesScreen";
 import AppNavigator from "./src/components/AppNavigator";
 import MoviesScreen from "./src/Screens/MoviesSceen/MoviesScreen";
 import ActionMoviesScreen from "./src/Screens/MoviesSceen/ActionMoviesScreen";
+import OverlayExample from "./src/components/Ovellay";
 
 export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -30,9 +31,11 @@ export default function App() {
 
   return (
     <View style={styles.app}>
+     
       <AppNavigator onCategoryChange={setSelectedCategory} />
       {renderMoviesScreen()}
     </View>
+    // <OverlayExample/>
   );
 }
 

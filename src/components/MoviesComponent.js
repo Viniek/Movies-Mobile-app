@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 8,
     overflow: "hidden",
-    elevation: 2, // for Android shadow
+    elevation: 2,// for Android shadow
   },
   image: {
     width: "100%",

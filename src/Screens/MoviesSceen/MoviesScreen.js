@@ -5,7 +5,10 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
-  TouchableWithoutFeedback,
+  Modal,
+  Pressable,
+  Button,
+
   
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -13,11 +16,15 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import axios from "axios";
 import Constants from "expo-constants";
 
+
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
 import AppTextInput from "../../components/AppTextInput";
 
 export default function MoviesScreen() {
+
+  const [isOverlayVisible,setIsOverlayVisible] = useState(false)
+
   const API_KEY = Constants.expoConfig.extra.TMDB_API_KEY;
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
@@ -75,7 +82,7 @@ export default function MoviesScreen() {
         type={item.genre_ids[0]?.toString() || "N/A"}
         download={'Download'}
         downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
-        onImagePress={() => alert(`We are working on this feature:`)}
+        onImagePress={() =>setIsOverlayVisible(true) }
         onDownloadPress={() => alert(`Downloading: ${item.title}`)}
       />
     </View>
@@ -114,6 +121,21 @@ export default function MoviesScreen() {
           )
         }
       />
+
+<Modal
+  transparent
+  visible={isOverlayVisible}
+  animationType="fade"
+  onRequestClose={() => setIsOverlayVisible(false)}
+>
+  <View style={styles.overlay}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalText}>Overlay</Text>
+      <Button title="Close" onPress={() => setIsOverlayVisible(false)} />
+    </View>
+  </View>
+</Modal>
+
     </SafeAreaContainer>
   );
 }
@@ -136,4 +158,22 @@ const styles = StyleSheet.create({
     color: "#555",
     marginTop: 10,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 15,
+  },
+  
 });
