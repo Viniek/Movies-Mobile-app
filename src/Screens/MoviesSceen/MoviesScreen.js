@@ -6,10 +6,7 @@ import {
   ActivityIndicator,
   Text,
   Modal,
-  Pressable,
-  Button,
-
-  
+  Button,  
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -20,6 +17,7 @@ import Constants from "expo-constants";
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
 import AppTextInput from "../../components/AppTextInput";
+import MovieDetails from "../../components/MovieDetails";
 
 export default function MoviesScreen() {
 
@@ -32,6 +30,7 @@ export default function MoviesScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -72,6 +71,9 @@ export default function MoviesScreen() {
     movie.title.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const openOverlay = async()=>{
+    setIsOverlayVisible(true)
+  }
   const renderItem = ({ item }) => (
     <View style={[styles.itemContainer, { width: itemWidth }]}>
       <MoviesComponent
@@ -82,8 +84,8 @@ export default function MoviesScreen() {
         type={item.genre_ids[0]?.toString() || "N/A"}
         download={'Download'}
         downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
-        onImagePress={() =>setIsOverlayVisible(true) }
-        onDownloadPress={() => alert(`Downloading: ${item.title}`)}
+        onImagePress={openOverlay}
+        onDownloadPress={() => alert(`This Feature of downloading: ${item.title} is coming sooon` )}
       />
     </View>
   );
@@ -130,8 +132,21 @@ export default function MoviesScreen() {
 >
   <View style={styles.overlay}>
     <View style={styles.modalContent}>
-      <Text style={styles.modalText}>Overlay</Text>
-      <Button title="Close" onPress={() => setIsOverlayVisible(false)} />
+      
+      <Button title="X" onPress={() => setIsOverlayVisible(false)} />
+<MovieDetails
+MovieTitle={"title"}
+MovieOverview={'overview'}
+MovieLanguage={'language'}
+MovieImage={'image'}
+MovieRatings={'ratings'}
+MovieDownloads={'downloads'}
+MovieType={'type'}
+MovieReleaseDate={'release date'}
+MovieDownloadIcon={'download icon'}
+
+
+/>
     </View>
   </View>
 </Modal>
