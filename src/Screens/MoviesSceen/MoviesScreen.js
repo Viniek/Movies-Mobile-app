@@ -38,6 +38,8 @@ export default function MoviesScreen() {
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`,
       );
+      console.log('response array',res.data.results);
+      
       const newMovies = res.data.results;
       if (newMovies.length > 0) {
         setMovies((prev) => [...prev, ...newMovies]);
@@ -69,6 +71,9 @@ export default function MoviesScreen() {
         ratings={item.vote_average}
         downloads={item.vote_count}
         type={item.genre_ids[0]?.toString() || "N/A"}
+        download={'Download'}
+        downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
+        
       />
     </View>
   );
@@ -81,7 +86,7 @@ export default function MoviesScreen() {
     <SafeAreaContainer>
       <AppTextInput
         placeholder="Search For Movies..."
-        icon={<MaterialIcons name="search" size={24} color="black" />}
+        icon={<MaterialIcons name="search" size={1} color="black" />}
         value={search}
         onChangeText={setSearch}
       />
