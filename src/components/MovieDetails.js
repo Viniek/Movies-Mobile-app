@@ -39,15 +39,15 @@ const styles = StyleSheet.create({
   MovieImageContainer:{
     width: '100%',
     borderColor:'blue',
-    height: 300,
+    height: 400,
     paddingTop:30,
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 10,
   },
   MovieImage:{
-    
-    width: '100%',
+    padding:10,
+   minWidth: '70%',
     height: '100%',
     borderRadius: 10,
     marginBottom: 10,
@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   MovieText:{
     fontWeight:'500',
     textTransform:'capitalize',
-    fontSize:20,
+    fontSize:13,
   },
 });
