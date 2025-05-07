@@ -5,6 +5,8 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
+  TouchableWithoutFeedback,
+  
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -73,7 +75,8 @@ export default function MoviesScreen() {
         type={item.genre_ids[0]?.toString() || "N/A"}
         download={'Download'}
         downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
-        
+        onImagePress={() => alert(`We are working on this feature:`)}
+        onDownloadPress={() => alert(`Downloading: ${item.title}`)}
       />
     </View>
   );

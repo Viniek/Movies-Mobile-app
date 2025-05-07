@@ -1,5 +1,6 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity,} from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity,TouchableWithoutFeedback} from "react-native";
 import React from "react";
+
 
 export default function MoviesComponent({
   title,
@@ -9,12 +10,13 @@ export default function MoviesComponent({
   type,
   download,
   downloadIcon,
-  onPress,
+  onImagePress,
+  onDownloadPress,
   ...otherProps
 }) {
   return (
     <View style={styles.container}>
-<TouchableOpacity onPress={onPress}>
+<TouchableOpacity onPress={onImagePress}>
 <Image
         source={image}
         style={styles.image}
@@ -27,7 +29,12 @@ export default function MoviesComponent({
         <Text>{type}</Text>
         <Text style={styles.rating}>Ratings: {ratings}</Text>
         <Text>downloads: {downloads}</Text>
-        <TouchableOpacity onPress={onPress} style={styles.downloadLink}><Text style={styles.downloadText}>{download}</Text> <Text style={styles.downloadIcon}>{downloadIcon}</Text></TouchableOpacity>
+        <TouchableWithoutFeedback onPress={onDownloadPress}>
+  <View style={styles.downloadLink}>
+    <Text style={styles.downloadText}>{download}</Text>
+    <Text style={styles.downloadIcon}>{downloadIcon}</Text>
+  </View>
+</TouchableWithoutFeedback>
       </View>
     </View>
   );
