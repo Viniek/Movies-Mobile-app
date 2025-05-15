@@ -5,6 +5,8 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
+  Modal,
+  Button,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -14,8 +16,11 @@ import Constants from "expo-constants";
 import SafeAreaContainer from "../../components/SafeAreaContainer";
 import MoviesComponent from "../../components/MoviesComponent";
 import AppTextInput from "../../components/AppTextInput";
+import MovieDetails from "../../components/MovieDetails";
 
 export default function MoviesScreen() {
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+
   const API_KEY = Constants.expoConfig.extra.TMDB_API_KEY;
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
@@ -23,7 +28,7 @@ export default function MoviesScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
-
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const { width: screenWidth } = useWindowDimensions();
 
   // Dynamically calculate columns
@@ -38,6 +43,8 @@ export default function MoviesScreen() {
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=${pageNumber}`,
       );
+      console.log("response array", res.data.results);
+
       const newMovies = res.data.results;
       if (newMovies.length > 0) {
         setMovies((prev) => [...prev, ...newMovies]);
@@ -61,6 +68,10 @@ export default function MoviesScreen() {
     movie.title.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const openOverlay = async (movie) => {
+    setSelectedMovie(movie);
+    setIsOverlayVisible(true);
+  };
   const renderItem = ({ item }) => (
     <View style={[styles.itemContainer, { width: itemWidth }]}>
       <MoviesComponent
@@ -69,6 +80,12 @@ export default function MoviesScreen() {
         ratings={item.vote_average}
         downloads={item.vote_count}
         type={item.genre_ids[0]?.toString() || "N/A"}
+        download={"Download"}
+        downloadIcon={<MaterialIcons name="download" size={24} color="white" />}
+        onImagePress={() => openOverlay(item)}
+        onDownloadPress={() =>
+          alert(`This Feature of downloading: ${item.title} is coming sooon`)
+        }
       />
     </View>
   );
@@ -81,7 +98,7 @@ export default function MoviesScreen() {
     <SafeAreaContainer>
       <AppTextInput
         placeholder="Search For Movies..."
-        icon={<MaterialIcons name="search" size={24} color="black" />}
+        icon={<MaterialIcons name="search" size={1} color="black" />}
         value={search}
         onChangeText={setSearch}
       />
@@ -106,6 +123,32 @@ export default function MoviesScreen() {
           )
         }
       />
+
+      <Modal
+        transparent
+        visible={isOverlayVisible}
+        animationType="fade"
+        onRequestClose={() => setIsOverlayVisible(false)}
+      >
+        {selectedMovie && (
+          <View style={styles.overlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}><Button title="X" onPress={() => setIsOverlayVisible(false)} /></View>
+              <MovieDetails
+                MovieImage={{
+                  uri: `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`,
+                }}
+                MovieTitle={selectedMovie.title}
+                MovieOverview={selectedMovie.overview}
+                MovieLanguage={selectedMovie.original_language}
+                MovieRatings={selectedMovie.vote_average}
+                MovieDownloads={selectedMovie.vote_count}
+                MovieReleaseDate={selectedMovie.release_date}
+              />
+            </View>
+          </View>
+        )}
+      </Modal>
     </SafeAreaContainer>
   );
 }
@@ -128,4 +171,37 @@ const styles = StyleSheet.create({
     color: "#555",
     marginTop: 10,
   },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    marginTop:10,
+    width: "90%",
+    maxHeight: "95%",
+    alignItems: "center",
+    position: "relative",
+  },
+  modalHeader: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  marginBottom:10
+  },
+  
+  modalText: {
+    fontSize: 18,
+    marginBottom: 15,
+  },
+  modalCloseBtn:{
+    display:"flex",
+    justifyContent:"flex-end",
+    borderColor:"white"
+  }
 });
